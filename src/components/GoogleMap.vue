@@ -90,8 +90,27 @@ onMounted(async () => {
     const initialMapOptions = props.useBounds
       ? getBoundedMapOptions(mapContainer.value, props.things, props.mapOptions)
       : props.mapOptions
+
+    const useOSMBaseMap = import.meta.env.VITE_APP_USE_OSM_BASEMAP || 'false'
+
+    if (useOSMBaseMap === 'true') {
+      initialMapOptions['mapTypeId'] = 'OSM'
+      initialMapOptions['mapTypeControlOptions'] = {mapTypeIds: ['OSM']}
+    }
+
     map = await loadMap(mapContainer.value, initialMapOptions)
     markers = loadMarkers(props.things, map, markerClusterer)
+
+    if (useOSMBaseMap === 'true') {
+      map.mapTypes.set("OSM", new google.maps.ImageMapType({
+        getTileUrl: function(coord, zoom) {
+          return "https://tile.openstreetmap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+        },
+        tileSize: new google.maps.Size(256, 256),
+        name: "Open Street Map",
+        maxZoom: 18
+      }));
+    }
 
     if (props.singleMarkerMode && map) {
       useSingleMarkerMode(map, markers, (locationData) =>
