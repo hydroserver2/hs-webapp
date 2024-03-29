@@ -11,6 +11,7 @@ import {
   DataSource,
   ThingArchive,
   Tag,
+  ApiKey,
 } from '@/types'
 
 export const BASE_URL = `${
@@ -22,6 +23,7 @@ export const BASE_URL = `${
 export const ACCOUNT_BASE = `${BASE_URL}/account`
 export const TAG_BASE = `${BASE_URL}/data/tags`
 export const USER_BASE = `${BASE_URL}/account/user`
+export const API_KEYS_BASE = `${BASE_URL}/account/api-keys`
 const DS_BASE = `${BASE_URL}/data/datastreams`
 const SENSOR_BASE = `${BASE_URL}/data/sensors`
 export const THINGS_BASE = `${BASE_URL}/data/things`
@@ -68,6 +70,11 @@ export const api = {
   updateUser: async (user: User, oldUser: User) =>
     apiMethods.patch(USER_BASE, user, oldUser),
   deleteUser: async () => apiMethods.delete(USER_BASE),
+
+  fetchApiKeys: async () => apiMethods.fetch(API_KEYS_BASE),
+  createApiKey: async (apiKey: ApiKey) => apiMethods.post(API_KEYS_BASE, apiKey),
+  updateApiKey: async (apiKey: ApiKey, oldApiKey: ApiKey) => apiMethods.patch(API_KEYS_BASE, apiKey, oldApiKey),
+  deleteApiKey: async () => apiMethods.delete(API_KEYS_BASE),
 
   resetPassword: async (uid: string, token: string, password: string) =>
     apiMethods.post(`${ACCOUNT_BASE}/reset-password`, {

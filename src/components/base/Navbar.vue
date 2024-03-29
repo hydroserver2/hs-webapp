@@ -222,6 +222,11 @@ const paths: {
         label: 'Manage Data Loaders',
         icon: 'mdi-file-upload',
       },
+      {
+        attrs: { to: '/api-keys' },
+        label: 'Manage API Keys',
+        icon: 'mdi-key-chain'
+      }
     ],
   },
   // {

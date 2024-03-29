@@ -291,6 +291,51 @@ export class DataSource {
   }
 }
 
+export enum ApiKeyModel {
+  Thing = 'Thing',
+  Photo = 'Photo',
+  Tag = 'Tag',
+  Datastream = 'Datastream',
+  ObservedProperty = 'ObservedProperty',
+  ProcessingLevel = 'ProcessingLevel',
+  Sensor = 'Sensor',
+  Unit = 'Unit',
+  ResultQualifier = 'ResultQualifier',
+  DataLoader = 'DataLoader',
+  DataSource = 'DataSource',
+  Observation = 'Observation'
+}
+
+export enum ApiKeyMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE'
+}
+
+export class ApiKeyPermissions {
+  model: ApiKeyModel
+  methods: ApiKeyMethod[]
+  resources: string[]
+  fields: string[]
+}
+
+export enum ApiKeyScope {
+  custom = 'custom',
+  dataLoader = 'dataLoader',
+}
+
+export class ApiKey {
+  id: string
+  name: string
+  key: string | null
+  expires: string | null
+  scope: ApiKeyScope
+  permissions: ApiKeyPermissions
+  enabled: boolean
+  lastUsed: string | null
+}
+
 export class DataLoader {
   id: string
   name: string

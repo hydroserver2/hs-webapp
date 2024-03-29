@@ -92,6 +92,12 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('@/pages/HydroLoaderDownload.vue'),
   },
   {
+    path: '/api-keys',
+    name: 'APIKeys',
+    component: () => import('@/pages/APIKeyDashboard.vue'),
+    meta: { hasAuthGuard: true },
+  },
+  {
     path: '/sign-up',
     name: 'SignUp',
     component: () => {
