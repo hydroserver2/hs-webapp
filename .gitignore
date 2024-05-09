@@ -14,6 +14,7 @@ dist-ssr
 
 # Editor directories and files
 .vscode/*
+DataManagement/coverage/*
 coverage/*
 !.vscode/extensions.json
 .idea

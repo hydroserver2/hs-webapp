@@ -15,17 +15,9 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
-    },
-    "typeRoots": ["./node_modules/@types", "src/types"]
+      "@shared/*": ["./shared/src/*"]
+    }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "vitest.config.ts"
-  ],
-  "exclude": ["node_modules", "dist"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.vue", "types/**/*.d.ts"],
+  "exclude": ["node_modules", "dist"]
 }

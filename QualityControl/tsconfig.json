@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@shared/*": ["../shared/src/*"]
+    }
+  },
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "exclude": ["node_modules", "../DataManagement/**/*"]
+}
