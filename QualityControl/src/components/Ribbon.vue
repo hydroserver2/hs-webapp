@@ -16,7 +16,7 @@
   <v-window v-model="ribbonTabs">
     <!-- Tabs -->
     <v-window-item v-for="(ribbon, index) in ribbons" :key="index">
-      <v-card variant="outlined" rounded="false">
+      <v-card color="blue-grey-darken-1" variant="outlined" rounded="false">
         <v-card-item>
           <v-row dense>
             <!-- Ribbon Groups -->
@@ -35,6 +35,11 @@
 
 <script setup lang="ts">
 import SaveRibbonGroup from '@/components/RibbonGroups/SaveRibbonGroup.vue'
+import ViewRibbonGroup from '@/components/RibbonGroups/ViewRibbonGroup.vue'
+import TimeRibbonGroup from '@/components/RibbonGroups/TimeRibbonGroup.vue'
+import HistoryRibbonGroup from '@/components/RibbonGroups/HistoryRibbonGroup.vue'
+import EditDataRibbonGroup from '@/components/RibbonGroups/EditDataRibbonGroup.vue'
+import FilterPointsRibbonGroup from '@/components/RibbonGroups/FilterPointsRibbonGroup.vue'
 import { useAuthStore } from '@shared/store/authentication'
 import { Snackbar } from '@shared/utils/notifications'
 import { ref } from 'vue'
@@ -49,11 +54,11 @@ const ribbons = ref([
   },
   {
     name: 'Plot',
-    groups: [{ title: 'group 1' }, { title: 'group 2' }, { title: 'group 3' }],
+    groups: [ViewRibbonGroup, TimeRibbonGroup],
   },
   {
     name: 'Edit',
-    groups: [{ title: 'group 1' }, { title: 'group 2' }, { title: 'group 3' }],
+    groups: [HistoryRibbonGroup, FilterPointsRibbonGroup, EditDataRibbonGroup],
   },
 ])
 
@@ -62,12 +67,3 @@ function onLogout() {
   Snackbar.info('You have logged out')
 }
 </script>
-
-<style scoped>
-.button-with-icon {
-  display: flex;
-  flex-direction: column; /* Aligns icon above the text */
-  align-items: center; /* Centers the content */
-  text-align: center; /* Ensures text is centered */
-}
-</style>

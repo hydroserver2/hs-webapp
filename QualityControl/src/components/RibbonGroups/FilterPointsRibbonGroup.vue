@@ -12,17 +12,11 @@
           {{ item.name }}
         </v-btn>
       </v-col>
-
-      <v-col cols="auto">
-        <v-btn size="small" prepend-icon="mdi-content-save" variant="flat">
-          Save
-        </v-btn>
-      </v-col>
     </v-row>
 
     <v-row>
       <v-col class="d-flex justify-center pt-0">
-        <p>Save to Database</p>
+        <p>Filter Points</p>
       </v-col>
     </v-row>
   </v-col>
@@ -30,14 +24,18 @@
 
 <script setup lang="ts">
 const items = [
-  { name: 'Save For Review', icon: 'mdi-account-multiple' },
+  { name: 'Value Thresholds', icon: 'mdi-chart-bell-curve-cumulative' },
   {
-    name: 'Save as New Datastream',
-    icon: 'mdi-content-save-all-outline',
+    name: 'Rate of Change',
+    icon: 'mdi-chart-timeline-variant',
   },
   {
-    name: 'Overwrite as Existing Datastream',
-    icon: 'mdi-content-save-edit',
+    name: 'Fill Gaps',
+    icon: 'mdi-keyboard-space',
+  },
+  {
+    name: 'Persistence',
+    icon: 'mdi-dots-horizontal',
   },
 ]
 </script>
