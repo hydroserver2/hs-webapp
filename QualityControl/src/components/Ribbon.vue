@@ -22,8 +22,8 @@
             <!-- Ribbon Groups -->
             <template v-for="group in ribbon.groups" cols="flex">
               <component :is="group" />
-              <v-col cols="auto">
-                <v-divider vertical />
+              <v-col cols="auto" class="px-3">
+                <v-divider vertical thickness="2" />
               </v-col>
             </template>
           </v-row>

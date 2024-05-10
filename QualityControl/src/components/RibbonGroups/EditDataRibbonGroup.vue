@@ -1,37 +1,31 @@
 <template>
   <v-col cols="auto">
     <v-row>
-      <v-col cols="auto">
-        <v-btn
-          v-for="item in items"
-          class="mr-1"
-          size="small"
-          :prepend-icon="item.icon"
+      <v-col v-for="item in items" cols="auto" class="px-1">
+        <SquareBtn
+          color="blue-grey-lighten-1"
+          :icon="item.icon"
+          :label="item.name"
+          btn-width="4rem"
           variant="outlined"
-        >
-          {{ item.name }}
-        </v-btn>
-        <!-- <SquareBtn :icon="'mdi-code-json'" :label="'Qualifying Comments'" /> -->
+        />
       </v-col>
 
-      <v-col cols="auto">
-        <v-btn
-          class="mr-1"
+      <v-col cols="auto" class="pr-0">
+        <SquareBtn
           color="delete"
-          size="small"
-          prepend-icon="mdi-trash-can-outline"
-          variant="flat"
-        >
-          Delete Points
-        </v-btn>
-        <v-btn
+          icon="mdi-trash-can-outline"
+          label="Delete Points"
+          btn-width="4rem"
+        />
+      </v-col>
+      <v-col class="px-1">
+        <SquareBtn
           color="green"
-          size="small"
-          prepend-icon="mdi-plus"
-          variant="flat"
-        >
-          Add Point
-        </v-btn>
+          icon="mdi-plus"
+          label="Add Point"
+          btn-width="4rem"
+        />
       </v-col>
     </v-row>
 
@@ -44,10 +38,10 @@
 </template>
 
 <script setup lang="ts">
-// import SquareBtn from '@/components/SquareBtn.vue'
+import SquareBtn from '@/components/SquareBtn.vue'
 
 const items = [
-  { name: 'Qualifying Comments', icon: 'mdi-code-json' },
+  { name: 'Qualifying Comments', icon: 'mdi-flag' },
   {
     name: 'Linear Drift Correction',
     icon: 'mdi-chart-sankey',

@@ -1,21 +1,19 @@
 <template>
   <v-col cols="auto">
     <v-row>
-      <v-col cols="auto">
-        <v-btn
-          v-for="item in items"
-          class="mr-1"
-          size="small"
-          :prepend-icon="item.icon"
+      <v-col v-for="item in items" cols="auto" class="px-1">
+        <SquareBtn
+          color="blue-grey-lighten-1"
+          :icon="item.icon"
+          :label="item.name"
+          btn-width="4rem"
           variant="outlined"
-        >
-          {{ item.name }}
-        </v-btn>
+        />
       </v-col>
 
       <!-- v-model="selectedQualifyingComments" -->
       <!-- :items="selectableQualifyingComments"  -->
-      <v-col cols="12">
+      <v-col cols="auto">
         <v-select
           label="Show Qualifying Comments"
           item-text="title"
@@ -25,6 +23,7 @@
           density="compact"
           variant="solo"
           hide-details
+          min-width="20rem"
         >
           <template v-slot:selection="{ item, index }">
             <!-- Leave blank so nothing appears in the v-select box -->
@@ -42,6 +41,8 @@
 </template>
 
 <script setup lang="ts">
+import SquareBtn from '@/components/SquareBtn.vue'
+
 const items = [
   { name: 'Show Legend', icon: 'mdi-map' },
   {

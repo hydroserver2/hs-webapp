@@ -20,7 +20,7 @@
     "npm": "^10.2.5",
     "tslib": "^2.5.0",
     "vue-echarts": "^6.6.9",
-    "vuetify": "^3.4.9"
+    "vuetify": "^3.6.4"
   },
   "devDependencies": {
     "@mdi/font": "^7.2.96",
