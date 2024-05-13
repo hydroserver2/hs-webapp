@@ -26,9 +26,9 @@
 </template>
 
 <script setup lang="ts">
-import { SummaryStatistics } from '@/utils/plotting/summaryStatisticUtils'
+import { SummaryStatistics } from '@shared/utils/plotting/summaryStatisticUtils'
 import { storeToRefs } from 'pinia'
-import { useDataVisStore } from '@/store/dataVisualization'
+import { useDataVisStore } from '@shared/store/dataVisualization'
 
 const { showSummaryStatistics, summaryStatisticsArray } = storeToRefs(
   useDataVisStore()

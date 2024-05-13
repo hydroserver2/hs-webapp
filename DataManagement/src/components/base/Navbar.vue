@@ -131,7 +131,7 @@ import { useAuthStore } from '@shared/store/authentication'
 import { Snackbar } from '@shared/utils/notifications'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
-import { useDataVisStore } from '@/store/dataVisualization'
+import { useDataVisStore } from '@shared/store/dataVisualization'
 
 const { resetState } = useDataVisStore()
 const { logout } = useAuthStore()

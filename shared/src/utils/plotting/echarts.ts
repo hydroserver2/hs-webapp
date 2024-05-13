@@ -1,7 +1,7 @@
 import { EChartsOption, YAXisComponentOption, SeriesOption } from 'echarts'
 import { GraphSeries } from '@shared/types'
 import { storeToRefs } from 'pinia'
-import { useDataVisStore } from '@/store/dataVisualization'
+import { useDataVisStore } from '@shared/store/dataVisualization'
 
 type yAxisConfigurationMap = Map<
   string,

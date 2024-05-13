@@ -1,11 +1,9 @@
 <template>
   <Ribbon />
-
-  <v-card class="ma-6">
-    <v-card-title> Welcome to the QC App! </v-card-title>
-  </v-card>
+  <visualizeData />
 </template>
 
 <script setup lang="ts">
+import VisualizeData from '@/components/VisualizeData.vue'
 import Ribbon from '@/components/Ribbon.vue'
 </script>

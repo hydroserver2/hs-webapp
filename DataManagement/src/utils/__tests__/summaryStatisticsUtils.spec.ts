@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 import {
   SummaryStatistics,
   calculateSummaryStatistics,
-} from '@/utils/plotting/summaryStatisticUtils'
+} from '@shared/utils/plotting/summaryStatisticUtils'
 import { DataPoint, GraphSeries } from '@shared/types'
 
 const createDataPoints = (values: number[]): DataPoint[] => {

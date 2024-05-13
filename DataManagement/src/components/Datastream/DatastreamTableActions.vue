@@ -135,7 +135,7 @@ import { ref } from 'vue'
 import { api } from '@shared/services/api'
 import { Snackbar } from '@shared/utils/notifications'
 import DatastreamSourceLinker from './DatastreamSourceLinker.vue'
-import { downloadDatastreamCSV } from '@/utils/CSVDownloadUtils'
+import { downloadDatastreamCSV } from '@shared/utils/CSVDownloadUtils'
 
 const props = defineProps({
   datastream: {

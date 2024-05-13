@@ -37,12 +37,12 @@
 <script setup lang="ts">
 import { Datastream, GraphSeries } from '@shared/types'
 import { subtractHours } from '@shared/utils/observationsUtils'
-import { createEChartsOption } from '@/utils/plotting/echarts'
+import { createEChartsOption } from '@shared/utils/plotting/echarts'
 import { EChartsOption } from 'echarts'
 import { onMounted, ref } from 'vue'
 import VChart from 'vue-echarts'
 import 'echarts'
-import { useObservationStore } from '@/store/observations'
+import { useObservationStore } from '@shared/store/observations'
 
 const { fetchGraphSeries } = useObservationStore()
 

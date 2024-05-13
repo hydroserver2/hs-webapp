@@ -107,7 +107,7 @@ import DatastreamTableActions from '@/components/Datastream/DatastreamTableActio
 import Sparkline from '@/components/Sparkline.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useMetadata } from '@/composables/useMetadata'
-import { useObservationStore } from '@/store/observations'
+import { useObservationStore } from '@shared/store/observations'
 import { storeToRefs } from 'pinia'
 import { useThingStore } from '@/store/thing'
 import { api } from '@shared/services/api'

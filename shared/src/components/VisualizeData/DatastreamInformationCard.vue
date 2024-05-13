@@ -95,12 +95,12 @@
 </template>
 
 <script setup lang="ts">
-import { useDataVisStore } from '@/store/dataVisualization'
+import { useDataVisStore } from '@shared/store/dataVisualization'
 import { Datastream, Owner, Unit } from '@shared/types'
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref } from 'vue'
 import { api } from '@shared/services/api'
-import { downloadDatastreamCSV } from '@/utils/CSVDownloadUtils'
+import { downloadDatastreamCSV } from '@shared/utils/CSVDownloadUtils'
 
 const props = defineProps({
   datastream: { type: Object as () => Datastream, required: true },

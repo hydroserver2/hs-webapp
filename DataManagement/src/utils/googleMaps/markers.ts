@@ -1,5 +1,5 @@
 import { Thing } from '@shared/types'
-import { googlePinColors } from '@/utils/materialColors'
+import { googlePinColors } from '@shared/utils/materialColors'
 import { ThingWithColor } from '@shared/types'
 import { MarkerClusterer } from '@googlemaps/markerclusterer'
 

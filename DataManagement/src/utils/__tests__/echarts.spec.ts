@@ -3,7 +3,7 @@ import {
   createYAxisConfigurations,
   generateSeriesOptions,
   generateYAxisOptions,
-} from '@/utils/plotting/echarts'
+} from '@shared/utils/plotting/echarts'
 
 describe('createYAxisConfigurations', () => {
   it('should correctly map single series to yAxis configurations', () => {

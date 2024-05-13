@@ -94,12 +94,12 @@
 </template>
 
 <script setup lang="ts">
-import { useDataVisStore } from '@/store/dataVisualization'
+import { useDataVisStore } from '@shared/store/dataVisualization'
 import { Datastream } from '@shared/types'
 import { storeToRefs } from 'pinia'
 import { computed, reactive, ref } from 'vue'
 import DatastreamInformationCard from './DatastreamInformationCard.vue'
-import { downloadSelectedDatastreamsCSVs } from '@/utils/CSVDownloadUtils'
+import { downloadSelectedDatastreamsCSVs } from '@shared/utils/CSVDownloadUtils'
 
 const {
   things,

@@ -5,7 +5,11 @@ export const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'Home',
     component: () => import('@/pages/Home.vue'),
-    meta: { hasAuthGuard: true, title: 'Home' },
+    meta: {
+      hasAuthGuard: true,
+      title: 'Home',
+      hasRibbon: true,
+    },
   },
   {
     path: '/login',

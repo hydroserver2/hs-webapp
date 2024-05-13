@@ -8,6 +8,8 @@
     "DataManagement"
   ],
   "dependencies": {
+    "echarts": "^5.5.0",
+    "vue-echarts": "^6.6.9",
     "jwt-decode": "^3.1.2",
     "pinia": "^2.1.6",
     "pinia-plugin-persistedstate": "^3.1.0",

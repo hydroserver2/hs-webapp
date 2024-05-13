@@ -19,7 +19,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
 import { DataArray, Datastream } from '@shared/types'
 import { preProcessData, subtractHours } from '@shared/utils/observationsUtils'
-import { useObservationStore } from '@/store/observations'
+import { useObservationStore } from '@shared/store/observations'
 import {
   GridComponent,
   TooltipComponent,

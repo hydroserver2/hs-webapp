@@ -37,7 +37,7 @@
 import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useThingStore } from '@/store/thing'
-import { materialColors } from '@/utils/materialColors'
+import { materialColors } from '@shared/utils/materialColors'
 import { useTagStore } from '@/store/tags'
 import { api } from '@shared/services/api'
 

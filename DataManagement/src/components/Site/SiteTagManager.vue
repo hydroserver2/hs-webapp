@@ -76,7 +76,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { materialColors } from '@/utils/materialColors'
+import { materialColors } from '@shared/utils/materialColors'
 import { storeToRefs } from 'pinia'
 import { useTagStore } from '@/store/tags'
 import { useUserTags } from '@/composables/useUserTags'

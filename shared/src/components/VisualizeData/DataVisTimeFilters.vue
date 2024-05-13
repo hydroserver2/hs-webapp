@@ -31,8 +31,8 @@
 </template>
 
 <script setup lang="ts">
-import DatePickerField from '@/components/VisualizeData/DatePickerField.vue'
-import { useDataVisStore } from '@/store/dataVisualization'
+import DatePickerField from '@shared/components/VisualizeData/DatePickerField.vue'
+import { useDataVisStore } from '@shared/store/dataVisualization'
 import { storeToRefs } from 'pinia'
 
 const { setDateRange, onDateBtnClick } = useDataVisStore()

@@ -8,13 +8,13 @@ import {
 import {
   SummaryStatistics,
   calculateSummaryStatistics,
-} from '@/utils/plotting/summaryStatisticUtils'
+} from '@shared/utils/plotting/summaryStatisticUtils'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { EChartsOption } from 'echarts'
-import { EChartsColors } from '@/utils/materialColors'
-import { createEChartsOption } from '@/utils/plotting/echarts'
-import { useObservationStore } from '@/store/observations'
+import { EChartsColors } from '@shared/utils/materialColors'
+import { createEChartsOption } from '@shared/utils/plotting/echarts'
+import { useObservationStore } from '@shared/store/observations'
 
 export const useDataVisStore = defineStore('dataVisualization', () => {
   const { fetchGraphSeries } = useObservationStore()

@@ -115,7 +115,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-import { useDataVisStore } from '@/store/dataVisualization'
+import { useDataVisStore } from '@shared/store/dataVisualization'
 import { storeToRefs } from 'pinia'
 
 const {

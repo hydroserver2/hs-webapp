@@ -71,8 +71,8 @@
 </template>
 
 <script setup lang="ts">
-import SummaryStatisticsTable from './SummaryStatisticsTable.vue'
-import { useDataVisStore } from '@/store/dataVisualization'
+import SummaryStatisticsTable from '@shared/components/VisualizeData/SummaryStatisticsTable.vue'
+import { useDataVisStore } from '@shared/store/dataVisualization'
 import { ref, watch, computed, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import VChart from 'vue-echarts'
