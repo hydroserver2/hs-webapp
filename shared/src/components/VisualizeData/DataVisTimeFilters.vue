@@ -1,5 +1,5 @@
 <template>
-  <v-row align="center" class="my-1">
+  <v-row align="center">
     <v-col col="auto">
       <v-btn
         v-for="option in dateOptions"

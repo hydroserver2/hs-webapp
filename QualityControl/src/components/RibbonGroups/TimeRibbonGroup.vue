@@ -3,7 +3,7 @@ a
   <v-col cols="auto">
     <v-row>
       <v-col cols="auto">
-        <!-- TODO: add time filter component here -->
+        <DataVisTimeFilters />
       </v-col>
     </v-row>
 
@@ -15,4 +15,6 @@ a
   </v-col>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import DataVisTimeFilters from '@shared/components/VisualizeData/DataVisTimeFilters.vue'
+</script>

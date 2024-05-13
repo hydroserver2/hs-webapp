@@ -12,15 +12,15 @@
         </v-expansion-panel>
       </v-expansion-panels>
 
-      <DataVisTimeFilters />
+      <DataVisTimeFilters class="my-1" />
 
       <v-sheet
         v-if="panels === 0"
         class="resize-handle"
         @mousedown="handleMouseDown"
         color="blue-grey-lighten-2"
-        :height="4"
-        :elevation="2"
+        :height="2.5"
+        :elevation="1"
         rounded="xl"
         outlined
       />

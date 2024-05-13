@@ -12,15 +12,13 @@
         </v-expansion-panel>
       </v-expansion-panels>
 
-      <DataVisTimeFilters />
-
       <v-sheet
         v-if="panels === 0"
-        class="resize-handle"
+        class="resize-handle mt-4"
         @mousedown="handleMouseDown"
         color="blue-grey-lighten-2"
-        :height="4"
-        :elevation="2"
+        :height="3"
+        :elevation="1"
         rounded="xl"
         outlined
       />
@@ -37,7 +35,6 @@
 import DataVisFiltersDrawer from '@shared/components/VisualizeData/DataVisFiltersDrawer.vue'
 import DataVisDatasetsTable from '@shared/components/VisualizeData/DataVisDatasetsTable.vue'
 import DataVisualizationCard from '@shared/components/VisualizeData/DataVisualizationCard.vue'
-import DataVisTimeFilters from '@shared/components/VisualizeData/DataVisTimeFilters.vue'
 import FullScreenLoader from '@shared/components/base/FullScreenLoader.vue'
 import { Snackbar } from '@shared/utils/notifications'
 import { api } from '@shared/services/api'
