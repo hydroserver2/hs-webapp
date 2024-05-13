@@ -42,7 +42,7 @@ import EditDataRibbonGroup from '@/components/RibbonGroups/EditDataRibbonGroup.v
 import FilterPointsRibbonGroup from '@/components/RibbonGroups/FilterPointsRibbonGroup.vue'
 import { useAuthStore } from '@shared/store/authentication'
 import { Snackbar } from '@shared/utils/notifications'
-import { ref } from 'vue'
+import { ref, markRaw } from 'vue'
 
 const { logout } = useAuthStore()
 
@@ -50,15 +50,19 @@ const ribbonTabs = ref(0)
 const ribbons = ref([
   {
     name: 'File',
-    groups: [SaveRibbonGroup],
+    groups: [markRaw(SaveRibbonGroup)],
   },
   {
     name: 'Plot',
-    groups: [ViewRibbonGroup, TimeRibbonGroup],
+    groups: [markRaw(ViewRibbonGroup), markRaw(TimeRibbonGroup)],
   },
   {
     name: 'Edit',
-    groups: [HistoryRibbonGroup, FilterPointsRibbonGroup, EditDataRibbonGroup],
+    groups: [
+      markRaw(HistoryRibbonGroup),
+      markRaw(FilterPointsRibbonGroup),
+      markRaw(EditDataRibbonGroup),
+    ],
   },
 ])
 

@@ -1,6 +1,6 @@
 <template>
   <Ribbon />
-  <visualizeData />
+  <VisualizeData />
 </template>
 
 <script setup lang="ts">
