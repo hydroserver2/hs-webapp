@@ -47,7 +47,7 @@ import { useDataVisStore } from '@shared/store/dataVisualization'
 import { storeToRefs } from 'pinia'
 
 const { logout } = useAuthStore()
-const { filterDrawer } = storeToRefs(useDataVisStore())
+const { filterDrawer, prevFilterDrawer } = storeToRefs(useDataVisStore())
 
 const ribbonTabs = ref(0)
 const ribbons = ref([
@@ -70,7 +70,11 @@ const ribbons = ref([
 ])
 
 watch(ribbonTabs, (newTabIndex) => {
-  filterDrawer.value = ribbons.value[newTabIndex].name === 'Plot'
+  if (ribbons.value[newTabIndex].name === 'Plot') {
+    filterDrawer.value = prevFilterDrawer.value
+  } else {
+    filterDrawer.value = false
+  }
 })
 
 function onLogout() {

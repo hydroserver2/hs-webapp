@@ -18,7 +18,7 @@
           label="Open Filters Drawer"
           btn-width="4rem"
           :variant="filterDrawer ? 'tonal' : 'outlined'"
-          @click="filterDrawer = !filterDrawer"
+          @click="updateFilterDrawer"
         />
       </v-col>
 
@@ -54,7 +54,12 @@ import SquareBtn from '@/components/SquareBtn.vue'
 import { useDataVisStore } from '@shared/store/dataVisualization'
 import { storeToRefs } from 'pinia'
 
-const { filterDrawer } = storeToRefs(useDataVisStore())
+const { filterDrawer, prevFilterDrawer } = storeToRefs(useDataVisStore())
+
+const updateFilterDrawer = () => {
+  filterDrawer.value = !filterDrawer.value
+  prevFilterDrawer.value = filterDrawer.value
+}
 
 const items = [
   { name: 'Show Legend', icon: 'mdi-map' },
