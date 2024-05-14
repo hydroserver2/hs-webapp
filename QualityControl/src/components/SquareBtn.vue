@@ -1,29 +1,19 @@
 <template>
-  <div class="button-container" :style="{ width: btnWidth }">
-    <v-btn class="mb-2" elevation="1" rounded="lg" v-bind="$attrs" />
-    <span class="text-caption label-text">{{ label }}</span>
-  </div>
+  <v-tooltip bottom :openDelay="500">
+    <template v-slot:activator="{ props }">
+      <v-btn
+        elevation="1"
+        rounded="lg"
+        v-bind="{ ...$attrs, ...props }"
+        @click.stop
+      />
+    </template>
+    {{ label }}
+  </v-tooltip>
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
+defineProps({
   label: String,
-  btnWidth: {
-    type: String,
-    default: '200px',
-  },
 })
 </script>
-
-<style scoped>
-.button-container {
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.label-text {
-  text-align: center;
-}
-</style>

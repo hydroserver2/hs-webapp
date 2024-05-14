@@ -17,8 +17,8 @@
     <!-- Tabs -->
     <v-window-item v-for="(ribbon, index) in ribbons" :key="index">
       <v-card color="blue-grey-darken-1" variant="outlined" rounded="false">
-        <v-card-item>
-          <v-row dense>
+        <v-card-text>
+          <v-row>
             <!-- Ribbon Groups -->
             <template v-for="group in ribbon.groups" cols="flex">
               <component :is="group" />
@@ -27,7 +27,7 @@
               </v-col>
             </template>
           </v-row>
-        </v-card-item>
+        </v-card-text>
       </v-card>
     </v-window-item>
   </v-window>
@@ -42,9 +42,12 @@ import EditDataRibbonGroup from '@/components/RibbonGroups/EditDataRibbonGroup.v
 import FilterPointsRibbonGroup from '@/components/RibbonGroups/FilterPointsRibbonGroup.vue'
 import { useAuthStore } from '@shared/store/authentication'
 import { Snackbar } from '@shared/utils/notifications'
-import { ref, markRaw } from 'vue'
+import { ref, markRaw, watch } from 'vue'
+import { useDataVisStore } from '@shared/store/dataVisualization'
+import { storeToRefs } from 'pinia'
 
 const { logout } = useAuthStore()
+const { filterDrawer } = storeToRefs(useDataVisStore())
 
 const ribbonTabs = ref(0)
 const ribbons = ref([
@@ -65,6 +68,10 @@ const ribbons = ref([
     ],
   },
 ])
+
+watch(ribbonTabs, (newTabIndex) => {
+  filterDrawer.value = ribbons.value[newTabIndex].name === 'Plot'
+})
 
 function onLogout() {
   logout()

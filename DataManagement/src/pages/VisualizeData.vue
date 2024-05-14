@@ -3,6 +3,10 @@
   <div v-else>
     <DataVisFiltersDrawer />
 
+    <div class="mt-4 mx-4" v-if="!filterDrawer">
+      <v-icon @click="filterDrawer = !filterDrawer">mdi-menu</v-icon>
+    </div>
+
     <div class="my-4 mx-4">
       <v-expansion-panels v-model="panels">
         <v-expansion-panel title="Data Visualization" v-if="cardHeight">
@@ -39,6 +43,7 @@ import DataVisDatasetsTable from '@shared/components/VisualizeData/DataVisDatase
 import DataVisualizationCard from '@shared/components/VisualizeData/DataVisualizationCard.vue'
 import DataVisTimeFilters from '@shared/components/VisualizeData/DataVisTimeFilters.vue'
 import FullScreenLoader from '@shared/components/base/FullScreenLoader.vue'
+import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { Snackbar } from '@shared/utils/notifications'
 import { api } from '@shared/services/api'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
@@ -64,6 +69,7 @@ const {
   selectedDateBtnId,
   cardHeight,
   tableHeight,
+  filterDrawer,
 } = storeToRefs(useDataVisStore())
 
 const panels = ref(0)
@@ -193,6 +199,7 @@ const parseUrlAndSetState = () => {
 }
 
 const loading = ref(true)
+const { smAndDown } = useDisplay()
 
 onMounted(async () => {
   const [
@@ -213,6 +220,7 @@ onMounted(async () => {
   observedProperties.value = observedPropertiesResponse
 
   parseUrlAndSetState()
+  filterDrawer.value = !!smAndDown
   loading.value = false
 })
 

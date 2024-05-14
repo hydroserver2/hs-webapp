@@ -1,8 +1,10 @@
 <template>
-  <v-navigation-drawer v-model="drawer" width="400">
+  <v-navigation-drawer v-model="filterDrawer" width="400">
     <v-card-title class="d-flex justify-space-between align-start">
       Filters
-      <v-icon v-if="drawer" @click="drawer = !drawer">mdi-menu-open</v-icon>
+      <v-icon v-if="filterDrawer" @click="filterDrawer = !filterDrawer"
+        >mdi-menu-open</v-icon
+      >
     </v-card-title>
 
     <v-divider />
@@ -106,15 +108,10 @@
       </v-expansion-panel>
     </v-expansion-panels>
   </v-navigation-drawer>
-
-  <div class="mt-4 mx-4" v-if="!drawer">
-    <v-icon @click="drawer = !drawer">mdi-menu</v-icon>
-  </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useDataVisStore } from '@shared/store/dataVisualization'
 import { storeToRefs } from 'pinia'
 
@@ -131,6 +128,7 @@ const {
   selectedThings,
   selectedObservedPropertyNames,
   selectedProcessingLevelNames,
+  filterDrawer,
 } = storeToRefs(useDataVisStore())
 
 const searchThing = ref('')
@@ -224,9 +222,7 @@ const clearFilters = () => {
   searchProcessingLevel.value = ''
 }
 
-const { smAndDown } = useDisplay()
 const panels = ref([0, 1, 2])
-const drawer = ref(!!smAndDown)
 </script>
 
 <style scoped>

@@ -28,6 +28,7 @@ export const useDataVisStore = defineStore('dataVisualization', () => {
   const selectedDatastreams = ref<Datastream[]>([])
   const selectedObservedPropertyNames = ref<string[]>([])
   const selectedProcessingLevelNames = ref<string[]>([])
+  const filterDrawer = ref(false)
 
   const showSummaryStatistics = ref(false)
   const summaryStatisticsArray = ref<SummaryStatistics[]>([])
@@ -307,6 +308,7 @@ export const useDataVisStore = defineStore('dataVisualization', () => {
     summaryStatisticsArray,
     cardHeight,
     tableHeight,
+    filterDrawer,
     matchesSelectedObservedProperty,
     matchesSelectedProcessingLevel,
     matchesSelectedThing,

@@ -11,11 +11,22 @@
         />
       </v-col>
 
+      <v-col cols="auto" class="px-1">
+        <SquareBtn
+          color="blue-grey-lighten-1"
+          icon="mdi-filter"
+          label="Show Filters"
+          btn-width="4rem"
+          :variant="filterDrawer ? 'tonal' : 'outlined'"
+          @click="filterDrawer = !filterDrawer"
+        />
+      </v-col>
+
       <!-- v-model="selectedQualifyingComments" -->
       <!-- :items="selectableQualifyingComments"  -->
       <v-col cols="auto">
         <v-select
-          label="Show Qualifying Comments"
+          label="Qualifying Comments"
           item-text="title"
           item-value="key"
           multiple
@@ -23,7 +34,7 @@
           density="compact"
           variant="solo"
           hide-details
-          min-width="20rem"
+          min-width="14rem"
         >
           <template v-slot:selection="{ item, index }">
             <!-- Leave blank so nothing appears in the v-select box -->
@@ -42,6 +53,10 @@
 
 <script setup lang="ts">
 import SquareBtn from '@/components/SquareBtn.vue'
+import { useDataVisStore } from '@shared/store/dataVisualization'
+import { storeToRefs } from 'pinia'
+
+const { filterDrawer } = storeToRefs(useDataVisStore())
 
 const items = [
   { name: 'Show Legend', icon: 'mdi-map' },
