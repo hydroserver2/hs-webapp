@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="auto">
+  <v-col cols="auto" class="d-flex flex-column justify-space-between">
     <v-row>
       <v-col v-for="item in items" cols="auto" class="px-1">
         <SquareBtn
@@ -15,7 +15,7 @@
         <SquareBtn
           color="blue-grey-lighten-1"
           icon="mdi-filter"
-          label="Show Filters"
+          label="Open Filters Drawer"
           btn-width="4rem"
           :variant="filterDrawer ? 'tonal' : 'outlined'"
           @click="filterDrawer = !filterDrawer"
@@ -43,10 +43,8 @@
       </v-col>
     </v-row>
 
-    <v-row>
-      <v-col class="d-flex justify-center pt-0">
-        <p>View</p>
-      </v-col>
+    <v-row class="d-flex justify-center align-end pt-0">
+      <p>View</p>
     </v-row>
   </v-col>
 </template>
