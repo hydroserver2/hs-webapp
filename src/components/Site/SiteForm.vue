@@ -169,7 +169,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn-cancel @click="closeDialog">Cancel</v-btn-cancel>
-        <v-btn-primary @click="uploadThing">Save</v-btn-primary>
+        <v-btn-primary @click="uploadThing" :loading="uploading"
+          >Save</v-btn-primary
+        >
       </v-card-actions>
     </v-form>
   </v-card>
@@ -210,6 +212,7 @@ const mapOptions = ref<any>(undefined)
 const thing = reactive<Thing>(new Thing())
 const includeDataDisclaimer = ref(thing.dataDisclaimer !== '')
 const { tags } = storeToRefs(useTagStore())
+const uploading = ref(false)
 
 watch(
   () => includeDataDisclaimer.value,
@@ -242,16 +245,13 @@ async function uploadThing() {
   if (!includeDataDisclaimer.value) thing.dataDisclaimer = ''
 
   try {
+    uploading.value = true
     storedThing.value = props.thingId
       ? await api.updateThing(thing)
       : await api.createThing(thing)
 
-    if (!props.thingId) {
-      console.log('emitting site-created from SiteForm.vue')
-      emit('site-created')
-    }
+    if (!props.thingId) emit('site-created')
 
-    console.log('Site upload response', storedThing.value)
     // Set the tag context to the current site so updateTags can compare
     // against what we already have if anything.
     tags.value = await api.fetchSiteTags(storedThing.value!.id)
@@ -260,6 +260,7 @@ async function uploadThing() {
   } catch (error) {
     console.error('Error updating thing', error)
   } finally {
+    uploading.value = false
     emit('close')
   }
 }
