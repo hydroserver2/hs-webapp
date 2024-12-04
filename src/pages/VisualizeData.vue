@@ -25,7 +25,6 @@
         outlined
       />
       <v-divider v-else />
-
       <div class="mt-1">
         <DataVisDatasetsTable @copy-state="copyStateToClipboard" />
       </div>
@@ -45,6 +44,7 @@ import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
 import { Snackbar } from '@/utils/notifications'
 import FullScreenLoader from '@/components/base/FullScreenLoader.vue'
+
 const route = useRoute()
 
 const { onDateBtnClick, resetState } = useDataVisStore()
@@ -105,19 +105,19 @@ const generateStateUrl = () => {
 
   const queryParams = new URLSearchParams()
 
-  const siteIds = selectedThings.value.map((t) => t.id).join(',')
-  if (siteIds) queryParams.append('sites', siteIds)
+  selectedThings.value.forEach((t) => queryParams.append('sites', t.id))
 
-  const datastreamIds = plottedDatastreams.value
-    .map((ds) => encodeURIComponent(ds.id))
-    .join(',')
-  if (datastreamIds) queryParams.append('datastreams', datastreamIds)
+  plottedDatastreams.value.forEach((ds) =>
+    queryParams.append('datastreams', ds.id)
+  )
 
-  if (selectedProcessingLevelNames.value.length)
-    queryParams.append('PLs', selectedProcessingLevelNames.value.join(','))
+  selectedProcessingLevelNames.value.forEach((pl) =>
+    queryParams.append('PLs', pl)
+  )
 
-  if (selectedObservedPropertyNames.value.length)
-    queryParams.append('OPs', selectedObservedPropertyNames.value.join(','))
+  selectedObservedPropertyNames.value.forEach((op) =>
+    queryParams.append('OPs', op)
+  )
 
   if (selectedDateBtnId.value < 0) {
     queryParams.append('beginDate', beginDate.value.toISOString())
@@ -152,7 +152,6 @@ const copyStateToClipboard = async () => {
 const parseUrlAndSetState = () => {
   const selectedDateBtnIdParam = (route.query.selectedDateBtnId as string) || ''
   if (selectedDateBtnIdParam !== '') {
-    // Convert the string to a number using the unary plus operator
     const btnId = +selectedDateBtnIdParam
     onDateBtnClick(btnId)
   } else {
@@ -165,25 +164,68 @@ const parseUrlAndSetState = () => {
     }
   }
 
-  const datastreamIdString = (route.query.datastreams as string) || ''
-  const datastreamIds = datastreamIdString.split(',')
-  if (datastreamIds)
+  // Datastream IDs
+  const datastreamIds = route.query.datastreams
+  const datastreamIdsArray = Array.isArray(datastreamIds)
+    ? datastreamIds
+    : datastreamIds
+    ? [datastreamIds]
+    : []
+
+  const datastreamIdsStrings = datastreamIdsArray.filter(
+    (id): id is string => typeof id === 'string'
+  )
+
+  if (datastreamIdsStrings.length)
     plottedDatastreams.value = datastreams.value.filter((ds) =>
-      datastreamIds.includes(ds.id)
+      datastreamIdsStrings.includes(ds.id)
     )
 
-  const siteIdString = (route.query.sites as string) || ''
-  const siteIds = siteIdString.split(',')
-  if (siteIds)
-    selectedThings.value = things.value.filter((t) => siteIds.includes(t.id))
+  // Site IDs
+  const siteIds = route.query.sites
+  const siteIdsArray = Array.isArray(siteIds)
+    ? siteIds
+    : siteIds
+    ? [siteIds]
+    : []
 
-  const OPNameString = (route.query.OPs as string) || ''
-  const OPNames = OPNameString ? OPNameString.split(',') : []
-  if (OPNames.length) selectedObservedPropertyNames.value = OPNames
+  const siteIdsStrings = siteIdsArray.filter(
+    (id): id is string => typeof id === 'string'
+  )
 
-  const PLNamesString = (route.query.PLs as string) || ''
-  const PLNames = PLNamesString ? PLNamesString.split(',') : []
-  if (PLNames.length) selectedProcessingLevelNames.value = PLNames
+  if (siteIdsStrings.length)
+    selectedThings.value = things.value.filter((t) =>
+      siteIdsStrings.includes(t.id)
+    )
+
+  // Observed Property Names
+  const OPNames = route.query.OPs
+  const OPNamesArray = Array.isArray(OPNames)
+    ? OPNames
+    : OPNames
+    ? [OPNames]
+    : []
+
+  const OPNamesStrings = OPNamesArray.filter(
+    (op): op is string => typeof op === 'string'
+  )
+
+  if (OPNamesStrings.length)
+    selectedObservedPropertyNames.value = OPNamesStrings
+
+  // Processing Level Names
+  const PLNames = route.query.PLs
+  const PLNamesArray = Array.isArray(PLNames)
+    ? PLNames
+    : PLNames
+    ? [PLNames]
+    : []
+
+  const PLNamesStrings = PLNamesArray.filter(
+    (pl): pl is string => typeof pl === 'string'
+  )
+
+  if (PLNamesStrings.length) selectedProcessingLevelNames.value = PLNamesStrings
 
   const start = (route.query.dataZoomStart as string) || ''
   if (start) dataZoomStart.value = +start
