@@ -46,7 +46,7 @@ const { item, items, openEdit, openDelete, openDialog, onUpdate, onDelete } =
     ObservedProperty
   )
 
-const props = defineProps<{ search: string }>()
+const props = defineProps<{ search: string | undefined }>()
 
 const headers = [
   { title: 'Name', key: 'name' },

@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center" v-if="showOAuthOptions">
+  <v-row justify="center" v-if="oAuthProviders.length > 0">
     <v-col cols="2">
       <v-divider class="mt-3" />
     </v-col>
@@ -9,10 +9,10 @@
     </v-col>
   </v-row>
 
-  <v-row v-for="provider in activeProviders" justify="center">
+  <v-row v-for="provider in filteredOAuthProviders" justify="center">
     <v-col cols="12" sm="8" md="6">
       <v-btn
-        @click="OAuthLogin(provider.auth)"
+        @click="signupOrLoginWithOAuth(provider.id)"
         variant="outlined"
         color="primary"
         :rounded="false"
@@ -20,7 +20,7 @@
         class="py-4"
       >
         <v-img
-          :src="provider.img"
+          :src="provider.iconLink"
           class="mr-1"
           width="100%"
           max-width="1.5rem"
@@ -33,37 +33,19 @@
 </template>
 
 <script setup lang="ts">
-import { OAuthProvider } from '@/types'
-import googleImg from '@/assets/google.png'
-import ORCIDImg from '@/assets/orcid.png'
-import { OAUTH_ENDPOINT } from '@/services/api'
+import { api } from '@/services/api'
+import { useAuthStore } from '@/store/authentication'
+import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
-const disableAccountCreation =
-  import.meta.env.VITE_APP_DISABLE_ACCOUNT_CREATION || 'false'
-const googleOauthEnabled =
-  import.meta.env.VITE_APP_GOOGLE_OAUTH_ENABLED || 'false'
-const orcidOauthEnabled =
-  import.meta.env.VITE_APP_ORCID_OAUTH_ENABLED || 'false'
+const { oAuthProviders } = storeToRefs(useAuthStore())
 
-const ORCID = { name: 'ORCID', auth: OAuthProvider.orcid, img: ORCIDImg }
-const google = { name: 'Google', auth: OAuthProvider.google, img: googleImg }
-
-const activeProviders = computed(() => {
-  if (disableAccountCreation === 'true') return []
-  const providers = []
-  if (googleOauthEnabled === 'true') providers.push(google)
-  if (orcidOauthEnabled === 'true') providers.push(ORCID)
-  return providers
-})
-
-const showOAuthOptions = computed(
-  () =>
-    (googleOauthEnabled === 'true' || orcidOauthEnabled === 'true') &&
-    disableAccountCreation !== 'true'
+const filteredOAuthProviders = computed(() =>
+  oAuthProviders.value.filter((provider) => provider.signupEnabled)
 )
 
-const OAuthLogin = async (provider: OAuthProvider) => {
-  window.location.href = OAUTH_ENDPOINT(provider)
+const signupOrLoginWithOAuth = (providerId: string) => {
+  const callbackUrl = `${import.meta.env.VITE_APP_PROXY_BASE_URL}/Sites`
+  api.providerRedirect(providerId, callbackUrl, 'login')
 }
 </script>

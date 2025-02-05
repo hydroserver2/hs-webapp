@@ -48,9 +48,9 @@
 <script setup lang="ts">
 import { api } from '@/services/api'
 import { Snackbar } from '@/utils/notifications'
-import { useAuthStore } from '@/store/authentication'
 import { computed, onMounted, ref } from 'vue'
 import { Thing } from '@/types'
+import { useAuthStore } from '@/store/authentication'
 
 const { logout } = useAuthStore()
 

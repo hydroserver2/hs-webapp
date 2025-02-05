@@ -55,8 +55,7 @@ const resetPassword = async () => {
 
   try {
     await api.resetPassword(
-      route.params.uid.toString(),
-      route.params.token.toString(),
+      route.params.passwordResetKey.toString(),
       password.value
     )
     Snackbar.success('Password has been reset')

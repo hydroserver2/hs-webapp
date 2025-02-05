@@ -14,7 +14,7 @@
       </v-col>
 
       <v-col cols="auto" v-if="isOwner">
-        <v-btn @click="isAccessControlModalOpen = true">Access Control</v-btn>
+        <v-btn @click="isAccessControlModalOpen = true">Access control</v-btn>
         <v-dialog v-model="isAccessControlModalOpen" width="60rem">
           <SiteAccessControl
             @close="isAccessControlModalOpen = false"
@@ -34,7 +34,7 @@
 
       <v-col cols="auto" v-if="isPrimaryOwner">
         <v-btn color="red-darken-3" @click="isDeleteModalOpen = true"
-          >Delete Site</v-btn
+          >Delete site</v-btn
         >
         <v-dialog v-model="isDeleteModalOpen" v-if="thing" width="40rem">
           <SiteDeleteModal
@@ -108,7 +108,6 @@ import { onMounted, computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePhotosStore } from '@/store/photos'
 import { useThingStore } from '@/store/thing'
-import { useUserStore } from '@/store/user'
 import { useTagStore } from '@/store/tags'
 import { storeToRefs } from 'pinia'
 import { api } from '@/services/api'
@@ -122,6 +121,7 @@ import SiteDeleteModal from '@/components/Site/SiteDeleteModal.vue'
 import HydroShareFormCard from '@/components/HydroShare/HydroShareFormCard.vue'
 import FullScreenLoader from '@/components/base/FullScreenLoader.vue'
 import { useHydroShareStore } from '@/store/hydroShare'
+import { useHydroShare } from '@/composables/useHydroShare'
 
 const thingId = useRoute().params.id.toString()
 const { photos, loading } = storeToRefs(usePhotosStore())
@@ -132,12 +132,12 @@ const { hydroShareArchive, loading: hydroShareLoading } = storeToRefs(
 const loaded = ref(false)
 const authorized = ref(true)
 const { thing } = storeToRefs(useThingStore())
-const { user } = storeToRefs(useUserStore())
 const { tags } = storeToRefs(useTagStore())
 
 const isOwner = computed(() => thing.value?.ownsThing)
 const isPrimaryOwner = computed(() => thing.value?.isPrimaryOwner)
-const hydroShareConnected = computed(() => user.value?.hydroShareConnected)
+const { isConnected: hydroShareConnected } = useHydroShare()
+
 const hasPhotos = computed(() => !loading.value && photos.value?.length > 0)
 
 const archivalBtnName = computed(() => {

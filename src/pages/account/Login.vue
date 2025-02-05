@@ -1,5 +1,5 @@
 <template>
-  <v-container class="mt-10" v-if="loaded">
+  <v-container class="mt-10">
     <v-row justify="center" align="center" class="mt-10">
       <v-col cols="12" sm="8" md="6">
         <v-card class="login-card">
@@ -35,6 +35,7 @@
             <v-card-actions class="text-body-1 signup-link-section">
               <v-spacer></v-spacer>
               <v-btn-primary
+                :loading="loading"
                 class="login-button mr-4"
                 :disabled="!valid"
                 type="submit"
@@ -46,7 +47,11 @@
       </v-col>
     </v-row>
 
-    <v-row justify="center" class="mt-6" v-if="disableAccountCreation !== 'true'">
+    <v-row
+      justify="center"
+      class="mt-6"
+      v-if="disableAccountCreation !== 'true'"
+    >
       <span class="mr-2">Don't have an account?</span>
       <router-link to="/sign-up" class="light-text signup-link"
         >Sign Up</router-link
@@ -64,61 +69,48 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/store/authentication'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { rules } from '@/utils/rules'
 import OAuth from '@/components/account/OAuth.vue'
 import { api } from '@/services/api'
-import router from '@/router/router'
-import { useUserStore } from '@/store/user'
-import { useRoute } from 'vue-router'
 import { Snackbar } from '@/utils/notifications'
+import { useAuthStore } from '@/store/authentication'
+import { storeToRefs } from 'pinia'
+import router from '@/router/router'
 
 const email = ref('')
 const password = ref('')
 const form = ref(null)
 const valid = ref(false)
-const loaded = ref(false)
-const route = useRoute()
-const disableAccountCreation = import.meta.env.VITE_APP_DISABLE_ACCOUNT_CREATION || 'false'
+const loading = ref(false)
+const disableAccountCreation =
+  import.meta.env.VITE_APP_DISABLE_ACCOUNT_CREATION || 'false'
 
-const { setTokens } = useAuthStore()
-const { setUser } = useUserStore()
-
-const login = async (accessToken: string, refreshToken: string) => {
-  try {
-    setTokens(accessToken, refreshToken)
-    const user = await api.fetchUser()
-    setUser(user)
-    Snackbar.success('You have logged in!')
-    await router.push({ name: 'Sites' })
-  } catch (e) {
-    console.log('Failed to fetch user info')
-  }
-}
+const { login, setSession } = useAuthStore()
+const { unverifiedEmail, inEmailVerificationFlow } = storeToRefs(useAuthStore())
 
 const formLogin = async () => {
   if (!valid) return
-
   try {
-    const tokens = await api.login(email.value, password.value)
-    login(tokens.access, tokens.refresh)
+    loading.value = true
+    const response = await api.login(email.value, password.value)
+    setSession(response)
+
+    if (inEmailVerificationFlow.value) {
+      console.info('Email not verified. Redirecting to verify email page.')
+      Snackbar.info('Email not verified. Redirecting to verify email page.')
+      unverifiedEmail.value = email.value
+      await router.push({ name: 'VerifyEmail' })
+    } else {
+      await login()
+    }
   } catch (error) {
     console.error('Error logging in.', error)
-    if ((error as Error).message === '401') {
+    if ((error as Error).message === '400') {
       Snackbar.warn('No active account found with the given credentials.')
     }
+  } finally {
+    loading.value = false
   }
 }
-
-const tryOAuthLogin = async () => {
-  const accessToken = (route.query.t as string) || ''
-  const refreshToken = (route.query.rt as string) || ''
-  if (accessToken && refreshToken) await login(accessToken, refreshToken)
-}
-
-onMounted(async () => {
-  await tryOAuthLogin()
-  loaded.value = true
-})
 </script>

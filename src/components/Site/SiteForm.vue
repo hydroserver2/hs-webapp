@@ -246,14 +246,8 @@ async function uploadThing() {
       ? await api.updateThing(thing)
       : await api.createThing(thing)
 
-    console.log('props.thingId', props.thingId)
+    if (!props.thingId) emit('site-created')
 
-    if (!props.thingId) {
-      console.log('emitting site-created from SiteForm.vue')
-      emit('site-created')
-    }
-
-    console.log('Site upload response', storedThing.value)
     // Set the tag context to the current site so updateTags can compare
     // against what we already have if anything.
     tags.value = await api.fetchSiteTags(storedThing.value!.id)

@@ -1,8 +1,5 @@
 import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest'
-import {
-  responseInterceptor,
-  parseResponseBody,
-} from '@/services/responseInterceptor'
+import { responseInterceptor } from '@/services/responseInterceptor'
 
 const originalConsoleError = console.error
 
@@ -16,77 +13,62 @@ afterEach(() => {
   console.error = originalConsoleError
 })
 
-describe('parseResponseBody', () => {
-  it('returns null for responses with Content-Length of 0', async () => {
-    const mockResponse = new Response(null, {
-      headers: { 'Content-Length': '0' },
-    })
-    const result = await parseResponseBody(mockResponse)
-    expect(result).toBeNull()
-  })
-
-  it('parses JSON response correctly', async () => {
-    const mockJson = { key: 'value' }
-    const mockResponse = new Response(JSON.stringify(mockJson), {
+describe('responseInterceptor', () => {
+  it('processes a 200 status code response correctly', async () => {
+    const mockJsonResponse = { success: true, data: 'Some data' }
+    const mockResponse = new Response(JSON.stringify(mockJsonResponse), {
+      status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
-    const result = await parseResponseBody(mockResponse)
-    expect(result).toEqual(mockJson)
+
+    const result = await responseInterceptor(mockResponse)
+    expect(result).toEqual(mockJsonResponse)
   })
 
-  it('returns a blob for CSV responses', async () => {
-    const mockCsv = 'header1,header2\nvalue1,value2'
-    const mockResponse = new Response(mockCsv, {
+  it('returns null if the Content-Length is 0', async () => {
+    const mockResponse = new Response('', {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': '0',
+      },
+    })
+
+    const result = await responseInterceptor(mockResponse)
+    expect(result).toBeNull()
+  })
+
+  it('returns a Blob for CSV content', async () => {
+    const csvData = 'id,name\n1,John\n2,Jane'
+    const mockResponse = new Response(csvData, {
+      status: 200,
       headers: { 'Content-Type': 'text/csv' },
     })
-    const result = await parseResponseBody(mockResponse)
-    expect(result).toBeInstanceOf(Object)
+
+    const result = await responseInterceptor(mockResponse)
+    const textContent = await (result as Blob).text()
+    expect(textContent).toBe(csvData)
   })
 
-  it('throws an error for non-OK responses', async () => {
-    const mockErrorResponse = new Response(
-      JSON.stringify({ error: 'Something went wrong' }),
-      {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    )
-    await expect(parseResponseBody(mockErrorResponse)).rejects.toThrow('400')
-  })
-
-  it('handles parsing errors gracefully and returns null', async () => {
-    const mockResponse = {
-      ok: true,
-      headers: new Headers({ 'Content-Type': 'application/json' }),
-      json: () => Promise.reject(new Error('Failed to parse')),
-    }
-    const consoleErrorSpy = vi.spyOn(console, 'error')
-    const result = await parseResponseBody(mockResponse as unknown as Response)
-    expect(consoleErrorSpy).toHaveBeenCalled()
-    expect(result).toBeNull()
-    consoleErrorSpy.mockRestore()
-  })
-
-  describe('responseInterceptor', () => {
-    it('processes a 200 status code response correctly', async () => {
-      const mockJsonResponse = { success: true, data: 'Some data' }
-      const mockResponse = new Response(JSON.stringify(mockJsonResponse), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      })
-
-      const method = () => {}
-      const endpoint = 'test/endpoint'
-      const options = {}
-
-      const result = await responseInterceptor(
-        mockResponse,
-        method,
-        endpoint,
-        options
-      )
-
-      expect(result).toEqual(mockJsonResponse)
+  it('returns errorBody for 401 status code without throwing', async () => {
+    const errorJson = { error: 'Unauthorized' }
+    const mockResponse = new Response(JSON.stringify(errorJson), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' },
     })
+
+    const result = await responseInterceptor(mockResponse)
+    expect(result).toEqual(errorJson)
+    expect(console.error).not.toHaveBeenCalled()
+  })
+
+  it('throws an error for non-401 status codes, logs null if non-JSON', async () => {
+    const mockResponse = new Response('Error occurred', {
+      status: 500,
+      headers: { 'Content-Type': 'text/plain' },
+    })
+
+    await expect(responseInterceptor(mockResponse)).rejects.toThrow('500')
+    expect(console.error).toHaveBeenCalledWith('API Response Not OK:', null)
   })
 })

@@ -5,9 +5,8 @@
     <v-col cols="auto" v-if="thing?.ownsThing">
       <v-btn-secondary
         prependIcon="mdi-plus"
-        variant="elevated"
         :to="{ name: 'DatastreamForm', params: { id: thingId } }"
-        >Add New Datastream</v-btn-secondary
+        >Add new datastream</v-btn-secondary
       >
     </v-col>
     <v-col v-if="datastreams.length">

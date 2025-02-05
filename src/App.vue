@@ -20,10 +20,8 @@ import Navbar from '@/components/base/Navbar.vue'
 import Footer from '@/components/base/Footer.vue'
 import Notifications from '@/components/base/Notifications.vue'
 import { useRoute } from 'vue-router'
-import { setupRouteGuards } from './router/router'
 
 const route = useRoute()
-setupRouteGuards()
 </script>
 
 <style scoped lang="scss">

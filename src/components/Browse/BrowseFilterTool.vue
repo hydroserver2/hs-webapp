@@ -20,7 +20,7 @@
         rounded="xl"
         @click="onClearFilters"
         append-icon="mdi-close"
-        >Clear Filters</v-btn
+        >Clear filters</v-btn
       >
     </div>
 

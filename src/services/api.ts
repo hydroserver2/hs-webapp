@@ -14,12 +14,15 @@ import {
   HydroShareArchive,
   User,
 } from '@/types'
+import { getCSRFToken } from './getCSRFToken'
 
 export const BASE_URL = `${import.meta.env.VITE_APP_PROXY_BASE_URL}/api`
 
-export const ACCOUNT_BASE = `${BASE_URL}/account`
+export const AUTH_BASE = `${BASE_URL}/auth`
+export const ACCOUNT_BASE = `${AUTH_BASE}/browser/account`
+export const SESSION_BASE = `${AUTH_BASE}/browser/session`
+export const PROVIDER_BASE = `${AUTH_BASE}/browser/provider`
 export const TAG_BASE = `${BASE_URL}/data/tags`
-export const USER_BASE = `${BASE_URL}/account/user`
 const DS_BASE = `${BASE_URL}/data/datastreams`
 const SENSOR_BASE = `${BASE_URL}/data/sensors`
 export const THINGS_BASE = `${BASE_URL}/data/things`
@@ -30,8 +33,6 @@ const PL_BASE = `${BASE_URL}/data/processing-levels`
 const RQ_BASE = `${BASE_URL}/data/result-qualifiers`
 const UNIT_BASE = `${BASE_URL}/data/units`
 export const SENSORTHINGS_BASE = `${BASE_URL}/sensorthings/v1.1`
-
-export const JWT_REFRESH = `${ACCOUNT_BASE}/jwt/refresh`
 
 export const getObservationsEndpoint = (
   id: string,
@@ -48,47 +49,88 @@ export const getObservationsEndpoint = (
   return url
 }
 
-export const OAUTH_ENDPOINT = (
+/**
+ * Initiates a synchronous form submission to redirect the user for OAuth login in a Django AllAuth
+ * environment. This allows the server to return a 302 redirect that the browser will follow,
+ * preserving session cookies and enabling AllAuth to handle the full OAuth handshake.
+ *
+ * @param {string} provider - The ID of the OAuth provider (e.g. "google", "hydroshare").
+ * @param {string} callbackUrl - The URL to which the user is redirected after the OAuth flow completes.
+ * @param {string} process - Enum: "login" or "connect" The process to be executed when the user successfully authenticates.
+ *                           When set to login, the user will be logged into the account to which the provider account is connected,
+ *                           or if no such account exists, a signup will occur. If set to connect, the provider account will
+ *                           be connected to the list of provider accounts for the currently authenticated user.
+ */
+const providerRedirect = (
   provider: string,
-  uid?: string,
-  token?: string
+  callbackUrl: string,
+  process: string
 ) => {
-  let url = `${ACCOUNT_BASE}/${provider}/login`
-  if (uid && token) {
-    url += `?uid=${uid}&token=${token}`
+  const data: Record<string, string> = {
+    provider: provider,
+    callback_url: callbackUrl,
+    process: process,
   }
-  return url
+  const csrfToken = getCSRFToken()
+  const form = document.createElement('form')
+  form.method = 'POST'
+  form.action = `${PROVIDER_BASE}/redirect`
+  if (csrfToken) {
+    const csrfInput = document.createElement('input')
+    csrfInput.type = 'hidden'
+    csrfInput.name = 'csrfmiddlewaretoken'
+    csrfInput.value = csrfToken
+    form.appendChild(csrfInput)
+  }
+  for (const key in data) {
+    const input = document.createElement('input')
+    input.type = 'hidden'
+    input.name = key
+    input.value = data[key]
+    form.appendChild(input)
+  }
+  document.body.appendChild(form)
+  form.submit()
 }
 
 export const api = {
-  createUser: async (user: User) => apiMethods.post(USER_BASE, user),
-  fetchUser: async () => apiMethods.fetch(USER_BASE),
-  updateUser: async (user: User, oldUser: User) =>
-    apiMethods.patch(USER_BASE, user, oldUser),
-  deleteUser: async () => apiMethods.delete(USER_BASE),
-
-  resetPassword: async (uid: string, token: string, password: string) =>
-    apiMethods.post(`${ACCOUNT_BASE}/reset-password`, {
-      uid: uid,
-      token: token,
-      password: password,
-    }),
-  sendPasswordRestEmail: async (email: string) =>
-    apiMethods.post(`${ACCOUNT_BASE}/send-password-reset-email`, {
-      email: email,
-    }),
+  fetchAuthMethods: async () => apiMethods.fetch(`${AUTH_BASE}/methods`),
+  fetchSession: async () => apiMethods.fetch(`${SESSION_BASE}`),
   login: async (email: string, password: string) =>
-    apiMethods.post(`${ACCOUNT_BASE}/jwt/pair`, {
+    apiMethods.post(`${SESSION_BASE}`, { email, password }),
+  logout: async () => apiMethods.delete(`${SESSION_BASE}`),
+  fetchUser: async () => apiMethods.fetch(`${ACCOUNT_BASE}`),
+  signup: async (user: User) => apiMethods.post(`${ACCOUNT_BASE}`, user),
+  updateUser: async (user: User, oldUser: User) =>
+    apiMethods.patch(`${ACCOUNT_BASE}`, user, oldUser),
+  deleteUser: async () => apiMethods.delete(`${ACCOUNT_BASE}`),
+  sendVerificationEmail: async (email: string) =>
+    apiMethods.put(`${ACCOUNT_BASE}/email/verify`, {
       email: email,
+    }),
+  verifyEmailWithCode: async (key: string) =>
+    apiMethods.post(`${ACCOUNT_BASE}/email/verify`, { key }),
+
+  requestPasswordReset: async (email: string) =>
+    apiMethods.post(`${ACCOUNT_BASE}/password/request`, {
+      email: email,
+    }),
+  resetPassword: async (key: string, password: string) =>
+    apiMethods.post(`${ACCOUNT_BASE}/password/reset`, {
+      key: key,
       password: password,
     }),
-  activateAccount: async (uid: string, token: string) =>
-    apiMethods.post(`${ACCOUNT_BASE}/activate`, {
-      uid: uid,
-      token: token,
+
+  fetchConnectedProviders: async () =>
+    apiMethods.fetch(`${PROVIDER_BASE}/connections`),
+  providerRedirect,
+  providerSignup: async (user: User) =>
+    apiMethods.post(`${PROVIDER_BASE}/signup`, user),
+  deleteProvider: async (provider: string, account: string) =>
+    apiMethods.delete(`${PROVIDER_BASE}/connections`, {
+      provider: provider,
+      account: account,
     }),
-  sendVerificationEmail: async () =>
-    apiMethods.post(`${ACCOUNT_BASE}/send-verification-email`),
 
   createUnit: async (unit: Unit) => apiMethods.post(UNIT_BASE, unit),
   fetchUnits: async () => apiMethods.fetch(UNIT_BASE),
@@ -154,10 +196,6 @@ export const api = {
   fetchDatastreamsForThing: async (thingId: string) =>
     apiMethods.fetch(`${THINGS_BASE}/${thingId}/datastreams`),
 
-  connectToHydroShare: async () =>
-    apiMethods.fetch(`${ACCOUNT_BASE}/hydroshare/connect`),
-  disconnectFromHydroShare: async () =>
-    apiMethods.fetch(`${ACCOUNT_BASE}/hydroshare/disconnect`),
   createHydroShareArchive: async (archive: PostHydroShareArchive) =>
     apiMethods.post(`${THINGS_BASE}/${archive.thingId}/archive`, archive),
   updateHydroShareArchive: async (

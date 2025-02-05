@@ -42,7 +42,7 @@ import { computed } from 'vue'
 const { item, items, openEdit, openDelete, openDialog, onUpdate, onDelete } =
   useTableLogic(api.fetchCurrentUserSensors, api.deleteSensor, Sensor)
 
-const props = defineProps<{ search: string }>()
+const props = defineProps<{ search: string | undefined }>()
 
 const headers = [
   { title: 'Name', key: 'name' },

@@ -1,36 +1,31 @@
-import { handle401 } from '@/services/handle401'
+import router from '@/router/router'
+import { useAuthStore } from '@/store/authentication'
+import { Snackbar } from '@/utils/notifications'
+import { storeToRefs } from 'pinia'
 
-export async function parseResponseBody(response: Response) {
-  try {
-    if (response.headers.get('Content-Length') === '0') return null
+export async function responseInterceptor(response: Response): Promise<any> {
+  if (response.headers.get('Content-Length') === '0') return null
+  const contentType = response.headers.get('content-type') || ''
 
-    if (response.ok) {
-      const contentType = response.headers.get('content-type')
-      if (contentType?.includes('application/json'))
-        return await response.json()
-      else if (contentType?.includes('text/csv')) return await response.blob()
+  if (response.ok) {
+    if (contentType?.includes('application/json')) return await response.json()
+    else if (contentType?.includes('text/csv')) return await response.blob()
+  }
+
+  let errorBody: any = null
+  if (contentType.includes('application/json')) {
+    try {
+      errorBody = await response.json()
+    } catch (err) {
+      console.error('Failed to parse error JSON:', err)
     }
-  } catch (error) {
-    console.error('Failed to parse JSON:', error)
-    return null
   }
-  if (!response.ok) {
-    const errorBody = await response.json()
-    console.error('API Response Not OK:', errorBody)
-    throw new Error(`${response.status}`)
-  }
-}
 
-export async function responseInterceptor(
-  response: Response,
-  method: Function,
-  endpoint: string,
-  options: any
-): Promise<any> {
-  if (response.status === 401 && !options._retry) {
-    if (endpoint.includes('jwt/pair')) return parseResponseBody(response)
-    return await handle401(method, endpoint, options)
-  } else {
-    return parseResponseBody(response)
-  }
+  // Django AllAuth doesn't consider 401 responses errors.
+  // Pass the response to the calling component to handle the AllAuth 'flows'.
+  console.log('errorBody', errorBody)
+  if (response.status === 401) return errorBody
+
+  console.error('API Response Not OK:', errorBody)
+  throw new Error(`${response.status}`)
 }

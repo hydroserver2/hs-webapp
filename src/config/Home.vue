@@ -1,26 +1,3 @@
-<script setup lang="ts">
-/**
- * The purpose of this file is to provide an example landing page for your HydroServer instance.
- * By default, the home page is disabled and navigating to '/' will redirect to the /browse page.
- * To enable the home page, set enableHomePage to true in homeConfig.ts then modify this file
- * as you wish.
- */
-import noaaLogo from '@/assets/noaa-min.png'
-import owpLogo from '@/assets/owp-min.png'
-import ogcLogo from '@/assets/ogc-min.png'
-import cirohLogo from '@/assets/CIROH_logo_transparent-min.png'
-import sensorThingsLogo from '@/assets/sensorThings-min.png'
-import hydroWhiteImg from '@/assets/hydroserver-white-min.png'
-import { useAuthStore } from '@/store/authentication'
-import { storeToRefs } from 'pinia'
-import { useUserStore } from '@/store/user'
-
-const { isLoggedIn } = storeToRefs(useAuthStore())
-const { user } = storeToRefs(useUserStore())
-const disableAccountCreation =
-  import.meta.env.VITE_APP_DISABLE_ACCOUNT_CREATION || 'false'
-</script>
-
 <template>
   <div class="banner">
     <div
@@ -37,7 +14,7 @@ const disableAccountCreation =
         </h4>
       </div>
 
-      <div v-if="isLoggedIn">
+      <div v-if="isAuthenticated">
         <h5 class="text-h5 mb-8 has-text-shadow">
           Logged in as {{ user?.firstName }}
           {{ user?.lastName }}
@@ -221,6 +198,29 @@ const disableAccountCreation =
     </p>
   </v-container>
 </template>
+
+<script setup lang="ts">
+/**
+ * The purpose of this file is to provide an example landing page for your HydroServer instance.
+ * By default, the home page is disabled and navigating to '/' will redirect to the /browse page.
+ * To enable the home page, set enableHomePage to true in homeConfig.ts then modify this file
+ * as you wish.
+ */
+import noaaLogo from '@/assets/noaa-min.png'
+import owpLogo from '@/assets/owp-min.png'
+import ogcLogo from '@/assets/ogc-min.png'
+import cirohLogo from '@/assets/CIROH_logo_transparent-min.png'
+import sensorThingsLogo from '@/assets/sensorThings-min.png'
+import hydroWhiteImg from '@/assets/hydroserver-white-min.png'
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/store/user'
+import { useAuthStore } from '@/store/authentication'
+
+const { isAuthenticated } = storeToRefs(useAuthStore())
+const { user } = storeToRefs(useUserStore())
+const disableAccountCreation =
+  import.meta.env.VITE_APP_DISABLE_ACCOUNT_CREATION || 'false'
+</script>
 
 <style scoped lang="scss">
 .v-container {

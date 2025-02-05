@@ -42,6 +42,8 @@ export default defineConfig({
       exclude: [
         '**/src/**/*.vue',
         '**/src/composables/useUserTags.ts',
+        '**/src/composables/useHydroShare.ts',
+        '**/src/services/getCSRFToken.ts',
         '**/src/plugins/**',
         '**/src/router/**',
         '**/src/store/**',

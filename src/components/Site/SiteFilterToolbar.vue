@@ -29,7 +29,7 @@
       v-model="currentColor"
       @change="updateColors"
       color="primary"
-      label="Show Legend"
+      label="Show legend"
       :disabled="!formKey"
       hide-details
     />
@@ -41,7 +41,7 @@
       rounded="xl"
       variant="outlined"
       append-icon="mdi-close"
-      >Clear Filters</v-btn
+      >Clear filters</v-btn
     >
   </v-toolbar>
 </template>

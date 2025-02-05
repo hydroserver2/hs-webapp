@@ -45,7 +45,7 @@ const { item, items, openEdit, openDelete, openDialog, onUpdate, onDelete } =
     ResultQualifier
   )
 
-const props = defineProps<{ search: string }>()
+const props = defineProps<{ search: string | undefined }>()
 
 const headers = [
   { title: 'Code', key: 'code' },

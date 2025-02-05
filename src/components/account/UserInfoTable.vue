@@ -24,30 +24,20 @@
 <script setup lang="ts">
 import { useUserStore } from '@/store/user'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import { api } from '@/services/api'
-import { useRoute, LocationQueryValue } from 'vue-router'
+import { useHydroShare } from '@/composables/useHydroShare'
 
 const { user } = storeToRefs(useUserStore())
-const { setUser } = useUserStore()
-const loaded = ref(false)
-const route = useRoute()
-const hydroShareOauthEnabled =
-  import.meta.env.VITE_APP_HYDROSHARE_OAUTH_ENABLED || 'false'
-
-const tryUserRefresh = async () => {
-  const refresh = (route.query.refresh as LocationQueryValue) || false
-  if (refresh) {
-    let user = await api.fetchUser()
-    if (user !== undefined) {
-      setUser(user)
-    }
-  }
-}
+const { isConnected: isHydroShareConnected, isHydroShareConnectionEnabled } =
+  useHydroShare()
 
 onMounted(async () => {
-  await tryUserRefresh()
-  loaded.value = true
+  try {
+    user.value = await api.fetchUser()
+  } catch (error) {
+    console.error('Error fetching user', error)
+  }
 })
 
 const userInformation = computed(() => {
@@ -70,12 +60,12 @@ const userInformation = computed(() => {
     { icon: 'mdi-phone', label: 'Phone', value: user.value.phone },
     { icon: 'mdi-card-account-details', label: 'Type', value: user.value.type },
     { icon: 'mdi-link', label: 'Link', value: user.value.link },
-    hydroShareOauthEnabled === 'true'
+    isHydroShareConnectionEnabled.value
       ? {
           icon: 'mdi-database',
           label: 'HydroShare account',
           value:
-            user.value.hydroShareConnected === true
+            isHydroShareConnected.value === true
               ? 'Connected'
               : 'Not Connected',
         }

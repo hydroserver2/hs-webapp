@@ -1,50 +1,27 @@
 <template>
   <v-btn
-    v-if="!hydroShareConnected"
+    v-if="!isConnected && isLoaded"
     color="deep-orange-lighten-1"
     prepend-icon="mdi-link"
-    @click="OAuthLogin(OAuthProvider.hydroshare)"
+    @click="connectHydroShare"
   >
     Connect to HydroShare
   </v-btn>
 
   <v-btn
-    v-else
+    v-else-if="isLoaded"
     color="deep-orange"
     variant="outlined"
     prepend-icon="mdi-close"
-    @click="disconnectFromHydroShare"
+    @click="disconnectHydroShare"
   >
     Disconnect from HydroShare
   </v-btn>
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '@/store/user'
-import { api } from '@/services/api'
-import { OAuthProvider } from '@/types'
-import { OAUTH_ENDPOINT } from '@/services/api'
-import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
-import { Snackbar } from '@/utils/notifications'
+import { useHydroShare } from '@/composables/useHydroShare'
 
-const { user } = storeToRefs(useUserStore())
-
-const OAuthLogin = async (provider: OAuthProvider) => {
-  let token = await api.connectToHydroShare()
-  window.location.href = OAUTH_ENDPOINT(provider, token.uid, token.token)
-}
-
-async function disconnectFromHydroShare() {
-  let response = await api.disconnectFromHydroShare()
-  if (response === null) {
-    user.value.hydroShareConnected = false
-    Snackbar.info('Your HydroShare account has been disconnected.')
-  }
-}
-
-const hydroShareConnected = computed(() => {
-  if (!user.value) return false
-  return user.value.hydroShareConnected
-})
+const { isConnected, isLoaded, connectHydroShare, disconnectHydroShare } =
+  useHydroShare()
 </script>

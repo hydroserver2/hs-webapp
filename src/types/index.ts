@@ -356,8 +356,8 @@ export class User {
   address: string
   organization?: Organization | null
   type: string
-  isVerified: boolean
   link: string
+  accountType: 'admin' | 'standard' | 'limited'
   hydroShareConnected: boolean
 
   constructor() {
@@ -370,8 +370,8 @@ export class User {
     this.phone = ''
     this.address = ''
     this.type = ''
-    this.isVerified = false
     this.link = ''
+    this.accountType = 'standard'
     this.hydroShareConnected = false
   }
 }
@@ -390,8 +390,18 @@ export interface Photo {
   link: string
 }
 
-export enum OAuthProvider {
-  google = 'google',
-  orcid = 'orcid',
-  hydroshare = 'hydroshare',
+export class OAuthProvider {
+  id: string
+  name: string
+  iconLink: string
+  signupEnabled: boolean
+  connectEnabled: boolean
+
+  constructor() {
+    this.id = ''
+    this.name = ''
+    this.iconLink = ''
+    this.signupEnabled = true
+    this.connectEnabled = true
+  }
 }

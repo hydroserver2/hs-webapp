@@ -2,14 +2,12 @@ import { requestInterceptor } from '@/services/requestInterceptor'
 import { responseInterceptor } from '@/services/responseInterceptor'
 import { Snackbar } from '@/utils/notifications'
 import { createPatchObject } from '@/services/createPatchObject'
-import { useAuthStore } from '@/store/authentication'
 
 async function interceptedFetch(endpoint: string, options: any) {
-  const authStore = useAuthStore()
-  const opts = requestInterceptor(options, authStore.accessToken)
+  const opts = requestInterceptor(options)
   try {
     const response = await fetch(endpoint, opts)
-    return await responseInterceptor(response, interceptedFetch, endpoint, opts)
+    return await responseInterceptor(response)
   } catch (error: any) {
     if (error instanceof TypeError)
       Snackbar.error('Network error. Please check your connection.')
@@ -42,8 +40,22 @@ export const apiMethods = {
     options.body = body
     return await interceptedFetch(endpoint, options)
   },
-  async delete(endpoint: string, options: any = {}): Promise<any> {
+  async put(
+    endpoint: string,
+    body: any = undefined,
+    options: any = {}
+  ): Promise<any> {
+    options.method = 'PUT'
+    options.body = body
+    return await interceptedFetch(endpoint, options)
+  },
+  async delete(
+    endpoint: string,
+    body: any = undefined,
+    options: any = {}
+  ): Promise<any> {
     options.method = 'DELETE'
+    options.body = body
     return await interceptedFetch(endpoint, options)
   },
 }

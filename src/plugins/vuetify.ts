@@ -24,8 +24,13 @@ const theme: ThemeDefinition = {
 }
 
 const textFieldAttrs = {
-  density: 'comfortable',
   variant: 'outlined',
+}
+
+const btnAttrs = {
+  color: 'primary',
+  style: 'text-transform: none;', // Remove uppercase text
+  rounded: false,
 }
 
 export default createVuetify({
@@ -39,42 +44,40 @@ export default createVuetify({
     VBtnAdd: VBtn,
   },
   defaults: {
+    global: {
+      density: 'compact',
+    },
+    VToolbar: { density: 'default' },
+    VDataTable: { density: 'default' },
     VTextField: textFieldAttrs,
     VAutocomplete: textFieldAttrs,
     VTextarea: textFieldAttrs,
     VCheckbox: textFieldAttrs,
-    VTable: {
-      density: 'comfortable',
-    },
     VCombobox: {
       variant: 'outlined',
     },
-    VBtn: {
-      color: 'primary',
-      density: 'comfortable',
-      rounded: false,
-    },
+    VBtn: btnAttrs,
     VBtnPrimary: {
+      ...btnAttrs,
       color: 'primary',
-      density: 'comfortable',
     },
     VBtnSecondary: {
+      ...btnAttrs,
       color: 'secondary',
-      density: 'comfortable',
     },
     VBtnDelete: {
+      ...btnAttrs,
       color: 'delete',
-      density: 'comfortable',
     },
     VBtnCancel: {
+      ...btnAttrs,
       color: 'grey',
-      density: 'comfortable',
     },
     VBtnAdd: {
+      ...btnAttrs,
       color: 'secondary',
       prependIcon: 'mdi-plus',
       rounded: true,
-      density: 'comfortable',
       variant: 'elevated',
     },
   },

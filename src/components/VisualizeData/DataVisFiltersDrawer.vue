@@ -9,7 +9,7 @@
 
     <div class="d-flex justify-end my-4 mx-2">
       <v-btn color="blue-grey-lighten-4" elevation="3" @click="clearFilters"
-        >Clear Filters</v-btn
+        >Clear filters</v-btn
       >
     </div>
 

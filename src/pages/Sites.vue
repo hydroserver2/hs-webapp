@@ -49,7 +49,7 @@
           prependIcon="mdi-filter"
           variant="outlined"
           rounded="xl"
-          >Filter Sites</v-btn
+          >Filter sites</v-btn
         >
 
         <v-btn-add class="mr-2" @click="showSiteForm = true" color="white">
@@ -205,7 +205,6 @@ const onRowClick = (event: Event, item: any) => {
 const loadThings = async () => {
   try {
     ownedThings.value = await api.fetchOwnedThings()
-    console.log('ownedThings', ownedThings.value)
   } catch (error) {
     Snackbar.error('Unable to fetch site data from the API.')
   } finally {

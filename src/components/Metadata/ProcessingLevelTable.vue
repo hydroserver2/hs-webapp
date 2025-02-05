@@ -46,7 +46,7 @@ const { item, items, openEdit, openDelete, openDialog, onUpdate, onDelete } =
     ProcessingLevel
   )
 
-const props = defineProps<{ search: string }>()
+const props = defineProps<{ search: string | undefined }>()
 
 const ProcLevelHeaders = [
   { title: 'Code', key: 'code' },

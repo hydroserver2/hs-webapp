@@ -33,7 +33,7 @@
           color="white"
           class="mr-2"
           @click="metaMap[tab]?.openDialog()"
-          >Add New {{ metaMap[tab]?.singularName }}</v-btn-add
+          >Add new {{ metaMap[tab]?.singularName }}</v-btn-add
         >
       </v-toolbar>
 
@@ -144,12 +144,12 @@ const metaMap: Record<string, any> = {
     singularName: 'sensor',
   },
   1: {
-    name: 'Observed Properties',
+    name: 'Observed properties',
     openDialog: () => (openOPCreate.value = true),
     singularName: 'observed property',
   },
   2: {
-    name: 'Processing Levels',
+    name: 'Processing levels',
     openDialog: () => (openPLCreate.value = true),
     singularName: 'processing level',
   },
@@ -159,7 +159,7 @@ const metaMap: Record<string, any> = {
     singularName: 'unit',
   },
   4: {
-    name: 'Result Qualifiers',
+    name: 'Result qualifiers',
     openDialog: () => (openRQCreate.value = true),
     singularName: 'result qualifier',
   },

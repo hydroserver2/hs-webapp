@@ -36,7 +36,7 @@
             />
           </v-col>
 
-          <v-col cols="12" v-if="!userForm.isVerified">
+          <v-col cols="12" v-if="(inProviderSignupFlow && isEdit) || !isEdit">
             <v-text-field
               v-model="userForm.email"
               label="Email *"
@@ -177,19 +177,21 @@ import { VForm } from 'vuetify/components'
 import { vMaska } from 'maska'
 import { Organization, User } from '@/types'
 import { useUserStore } from '@/store/user'
-import router from '@/router/router'
 import { Snackbar } from '@/utils/notifications'
 import { api } from '@/services/api'
 import { storeToRefs } from 'pinia'
+import router from '@/router/router'
 import { useAuthStore } from '@/store/authentication'
 
 const props = defineProps({
   hasCancelButton: { type: Boolean, required: false, default: true },
   isEdit: Boolean,
+  isCompleteSignup: { type: Boolean, required: false, default: false },
 })
 
-const { setTokens } = useAuthStore()
-const { setUser } = useUserStore()
+const { login, setSession } = useAuthStore()
+const { inProviderSignupFlow, inEmailVerificationFlow, unverifiedEmail } =
+  storeToRefs(useAuthStore())
 const { user } = storeToRefs(useUserStore())
 
 let userForm = reactive<User>(
@@ -224,11 +226,16 @@ const emit = defineEmits(['close'])
 
 async function createUser() {
   try {
-    const data = await api.createUser(userForm)
-    setUser(data.user)
-    setTokens(data.access, data.refresh)
-    Snackbar.success('Account created.')
-    await router.push({ name: 'VerifyEmail' })
+    const sessionResponse = await api.signup(userForm)
+    setSession(sessionResponse)
+
+    if (inEmailVerificationFlow.value) {
+      unverifiedEmail.value = userForm.email
+      await router.push({ name: 'VerifyEmail' })
+    } else {
+      Snackbar.success('Account created.')
+      await router.push({ name: 'Sites' })
+    }
   } catch (error) {
     console.error('Error creating user', error)
     if ((error as Error).message === '409') {
@@ -237,22 +244,32 @@ async function createUser() {
   }
 }
 
+async function completeSignup() {
+  try {
+    const providerResponse = await api.providerSignup(userForm)
+    setSession(providerResponse)
+    await login()
+  } catch (error) {
+    console.error('Error creating user', error)
+  }
+}
+
 const updateUser = async () => {
   try {
-    userForm = await api.updateUser(userForm, user.value)
-    if (userForm !== undefined) setUser(userForm)
+    userForm = await api.updateUser(userForm, user.value!)
+    if (userForm !== undefined) user.value = userForm
   } catch (error) {
     console.error('Error updating user', error)
   }
-  if (!user.value?.isVerified) await router.push({ name: 'VerifyEmail' })
-  else Snackbar.success('Your changes have been saved.')
+  Snackbar.success('Your changes have been saved.')
   emit('close')
 }
 
 const onSubmit = async () => {
   await myForm.value?.validate()
   if (!valid.value) return
-  if (props.isEdit) updateUser()
+  if (props.isCompleteSignup) completeSignup()
+  else if (props.isEdit) updateUser()
   else createUser()
 }
 
